@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أنواع الأخبار الكاذبة</title>
+    <style>
+        :root {
+            --primary: #001a33;
+            --secondary: #0056b3;
+            --accent: #007bff;
+            --light: #f0f2f5;
+            --dark: #121212;
+            --text-light: #333;
+            --text-dark: #e0e0e0;
+            --card-bg: #ffffff;
+            --card-dark: #1e1e1e;
+            --section-bg: #f9f9f9;
+            --section-dark: #2d2d2d;
+            --case-study-bg: #e6f2ff;
+            --case-study-dark: #1e3a5f;
+            --checklist-bg: #f0f8ff;
+            --checklist-dark: #1e3a5f;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: var(--text-light);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .taskbar {
+            background-color: var(--primary);
+            padding: 10px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .taskbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        .taskbar img {
+            width: 30px;
+            height: 30px;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .taskbar img:hover {
+            transform: scale(1.1);
+        }
+
+        .taskbar h1 {
+            margin: 0;
+            font-size: 22px;
+            flex-grow: 1;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .taskbar .home-icon {
+            margin-left: 10px;
+        }
+
+        .taskbar .home-icon img {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        .taskbar .brand {
+            margin-left: auto;
+            font-weight: bold;
+            font-size: 24px;
+            color: white;
+        }
+
+        .container {
+            width: 80%;
+            margin: 80px auto;
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--primary);
+            transition: color 0.3s ease;
+        }
+
+        img {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 15px 0;
+            line-height: 1.6;
+            transition: color 0.3s ease;
+        }
+
+        .footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 50px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* قسم القنوات الموثوقة */
+        .trusted-sources {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .trusted-sources h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .logos-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logos-container img {
+            width: 60px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .logos-container img:hover {
+            transform: scale(1.1);
+        }
+
+        /* أنماط جديدة للمحتوى الموسع */
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            border-right: 4px solid var(--primary);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .case-study {
+            background-color: var(--case-study-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #555;
+            border-right: 3px solid var(--primary);
+            padding-right: 15px;
+            margin: 20px 0;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .statistics {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            min-width: 150px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            transition: color 0.3s ease;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .checklist {
+            background-color: var(--checklist-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .checklist li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-right: 25px;
+        }
+
+        .checklist li:before {
+            content: "✓";
+            color: #28a745;
+            position: absolute;
+            right: 0;
+        }
+
+        /* زر الوضع المظلم */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            cursor: pointer;
+            z-index: 1000;
+            background-color: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .dark-mode-icon {
+            width: 30px;
+            height: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode-icon .sun {
+            fill: #FFD700;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .dark-mode-icon .moon {
+            fill: #FFFFFF;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* أنماط الوضع المظلم */
+        body.dark-mode {
+            background-color: var(--dark);
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .container {
+            background-color: var(--card-dark);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode .trusted-sources h2,
+        body.dark-mode .stat-value {
+            color: var(--accent);
+        }
+
+        body.dark-mode .section {
+            background-color: var(--section-dark);
+            border-right-color: var(--accent);
+        }
+
+        body.dark-mode .case-study {
+            background-color: var(--case-study-dark);
+        }
+
+        body.dark-mode .quote {
+            color: #b0b0b0;
+            border-right-color: var(--accent);
+        }
+
+        body.dark-mode .stat-label {
+            color: #a0a0a0;
+        }
+
+        body.dark-mode .checklist {
+            background-color: var(--checklist-dark);
+        }
+
+        body.dark-mode p {
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .taskbar,
+        body.dark-mode .footer {
+            background-color: #0d1b2a;
+        }
+
+        body.dark-mode .dark-mode-toggle {
+            background-color: var(--accent);
+        }
+
+        body.dark-mode .dark-mode-icon .sun {
+            opacity: 0;
+        }
+
+        body.dark-mode .dark-mode-icon .moon {
+            opacity: 1;
+        }
+
+        /* التكيف مع الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+                margin: 70px auto;
+                padding: 15px;
+            }
+            
+            .taskbar h1 {
+                font-size: 20px;
+            }
+            
+            .taskbar .brand span {
+                font-size: 20px;
+            }
+            
+            .dark-mode-toggle {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 95%;
+                margin: 60px auto;
+                padding: 10px;
+            }
+            
+            .taskbar h1 {
+                font-size: 18px;
+            }
+            
+            .taskbar .brand span {
+                font-size: 18px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="taskbar">
+        <div class="home-icon">
+            <a href="index.html">
+                <img src="source/home.png" alt="الصفحة الرئيسية">
+            </a>
+        </div>
+        <h1>تعريف الأخبار الكاذبة وأثرها</h1>
+        <div class="brand">
+            <span>KTT</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <img src="source/fakeNews.jpg" alt="Fake News">
+        <h1>ما هي الأخبار الكاذبة؟</h1>
+        <p>الأخبار الكاذبة هي الأخبار التي تحتوي على معلومات غير دقيقة أو مفبركة، تهدف إلى تضليل الجمهور أو التأثير في الرأي العام. قد تكون هذه الأخبار تهدف إلى نشر الفتنة أو تحقيق مكاسب اقتصادية أو سياسية.</p>
+
+        <div class="section">
+            <h2>التاريخ الخفي للأخبار الكاذبة</h2>
+            <p>على الرغم من أن مصطلح "الأخبار الكاذبة" أصبح شائعًا في السنوات الأخيرة، إلا أن جذوره تمتد إلى قرون مضت. في القرن الخامس عشر، استخدمت الكنيسة الكاثوليكية منشورات مزيفة لتشويه سمعة مارتن لوثر. وخلال الحرب العالمية الأولى، نشرت جميع الأطراف أخبارًا كاذبة لتعزيز الروح المعنوية لقواتها وإضعاف العدو.</p>
+            
+            <div class="case-study">
+                <h3>دراسة حالة: الحرب العالمية الأولى</h3>
+                <p>في عام 1917، نشرت الصحف البريطانية تقارير كاذبة عن جنود ألمان يقومون بغلي جثث الجنود لاستخراج الجلسرين. هذه القصة المفبركة ساعدت في تجنيد المزيد من الجنود البريطانيين.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>أنواع الأخبار الكاذبة</h2>
+            <ul>
+                <li><strong>الأخبار المفبركة:</strong> لا أساس لها من الصحة تمامًا. مثال: "العلماء يكتشفون أن الأرض مسطحة"</li>
+                <li><strong>التلاعب بالصور والفيديوهات:</strong> لتشويه الحقيقة. مثال: استخدام برامج التعديل لخلق مشاهد لم تحدث.</li>
+                <li><strong>الأخبار المضللة:</strong> تحتوي على جزء من الحقيقة يُستخدم بشكل خاطئ. مثال: اقتباس خارج السياق.</li>
+                <li><strong>الشائعات:</strong> أخبار تنتشر بسرعة دون مصدر موثوق. مثال: "مشاهير ماتوا بينما هم أحياء".</li>
+                <li><strong>المحتوى المسيء:</strong> استخدام حقائق دقيقة ولكن بطريقة تحريضية.</li>
+                <li><strong>المحتوى المزيف:</strong> مواقع إخبارية وهمية تنتحل صفة وسائل إعلام حقيقية.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>أسباب انتشار الأخبار الكاذبة</h2>
+            <div class="statistics">
+                <div class="stat-item">
+                    <div class="stat-value">86%</div>
+                    <div class="stat-label">من مستخدمي الإنترنت وقعوا في فخ الأخبار الكاذبة</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">6x</div>
+                    <div class="stat-label">تنتشر الأخبار الكاذبة أسرع من الحقيقية</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">65%</div>
+                    <div class="stat-label">من حالات التضليل تكون لأغراض سياسية</div>
+                </div>
+            </div>
+
+            <ul>
+                <li><strong>الرغبة في التأثير السياسي:</strong> تستخدمها الحكومات والأحزاب لتشويه الخصوم.</li>
+                <li><strong>زيادة التفاعل على وسائل التواصل:</strong> الأخبار المثيرة تحقق مشاهدات أكثر.</li>
+                <li><strong>الجهل أو قلة المعلومات:</strong> بعض الناشرين لا يتحققون من الحقائق.</li>
+                <li><strong>الدوافع الاقتصادية:</strong> بعض المواقع تروج للأخبار الكاذبة لزيادة الإعلانات.</li>
+                <li><strong>التحيز المعرفي:</strong> الناس تميل لتصديق ما يتوافق مع معتقداتها.</li>
+                <li><strong>سهولة النشر:</strong> أي شخص يمكنه نشر أي شيء دون رقابة.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>تأثير الأخبار الكاذبة على المجتمع</h2>
+            <div class="quote">
+                "الأخبار الكاذبة هي أكبر تهديد للديمقراطية في عصرنا" - مارك زوكربيرج
+            </div>
+
+            <ul>
+                <li><strong>إحداث الارتباك والتضليل:</strong> تجعل من الصعب التمييز بين الحقيقة والكذب.</li>
+                <li><strong>زعزعة الثقة في وسائل الإعلام:</strong> الناس تصبح أكثر تشككًا في جميع الأخبار.</li>
+                <li><strong>التحريض على العنف والكراهية:</strong> أخبار كاذبة تسببت في أعمال شغب وقتل.</li>
+                <li><strong>تأثير اقتصادي:</strong> أخبار كاذبة عن شركات تؤثر على أسعار الأسهم.</li>
+                <li><strong>تأثير على الصحة العامة:</strong> معلومات خاطئة عن اللقاحات تسبب انتشار الأمراض.</li>
+                <li><strong>تقسيم المجتمع:</strong> تعميق الخلافات بين الجماعات المختلفة.</li>
+            </ul>
+
+            <div class="case-study">
+                <h3>دراسة حالة: لقاحات كورونا</h3>
+                <p>في 2020، انتشرت إشاعة أن لقاحات كورونا تحتوي على شريحة تتبع. هذه الإشاعة أدت إلى تردد الكثيرين في أخذ اللقاح، مما ساهم في استمرار الوباء.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>أمثلة صادمة من الواقع</h2>
+            <ul>
+                <li><strong>أخبار مغلوطة عن لقاح كورونا:</strong> ادعاءات أن اللقاح يغير الحمض النووي.</li>
+                <li><strong>أخبار كاذبة خلال الانتخابات:</strong> مثل الانتخابات الأمريكية 2016.</li>
+                <li><strong>فيديوهات مزيفة لأحداث حقيقية:</strong> مثل فيديوهات "ديب فيك" للسياسيين.</li>
+                <li><strong>إشاعات عن مشاهير:</strong> مثل أخبار وفاة ممثلين وهمية.</li>
+                <li><strong>أخبار كوارث لم تحدث:</strong> مثل إعصار مزيف سيضرب منطقة ما.</li>
+                <li><strong>نظريات المؤامرة:</strong> مثل الأرض المسطحة أو هبوط مزيف على القمر.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>كيفية التحقق من الأخبار: دليل عملي</h2>
+            <div class="checklist">
+                <h3>قائمة التحقق من الأخبار</h3>
+                <ul>
+                    <li>تحقق من المصدر: هل الموقع معروف وموثوق؟</li>
+                    <li>ابحث عن الخبر في وسائل إعلام أخرى</li>
+                    <li>تحقق من تاريخ النشر: قديم أم حديث؟</li>
+                    <li>افحص الصور باستخدام البحث العكسي</li>
+                    <li>اقرأ التعليقات: قد يشير الآخرون للتضليل</li>
+                    <li>استخدم مواقع التحقق مثل Snopes أو FactCheck</li>
+                    <li>اسأل خبراء في المجال</li>
+                    <li>تحقق من السياق: هل الاقتباسات كاملة؟</li>
+                </ul>
+            </div>
+
+            <h3>أدوات مفيدة للتحقق</h3>
+            <ul>
+                <li><strong>Google Reverse Image Search:</strong> للتحقق من الصور</li>
+                <li><strong>InVID:</strong> لتحليل الفيديوهات</li>
+                <li><strong>TinEye:</strong> محرك بحث عكسي للصور</li>
+                <li><strong>FactCheck.org:</strong> للتحقق من الحقائق</li>
+                <li><strong>Snopes:</strong> للتحقق من الشائعات</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>كيف تحمي نفسك وعائلتك</h2>
+            <p>في عصر المعلومات السريعة، أصبحت حماية نفسك من الأخبار الكاذبة ضرورة. إليك بعض النصائح:</p>
+            
+            <ul>
+                <li><strong>كن متشككًا:</strong> لا تصدق كل ما تراه على الإنترنت.</li>
+                <li><strong>علم أطفالك:</strong> كيفية التحقق من المعلومات.</li>
+                <li><strong>لا تشارك:</strong> دون التحقق أولاً.</li>
+                <li><strong>تابع مصادر متنوعة:</strong> لتجنب فقاعة الترشيح.</li>
+                <li><strong>طور مهاراتك:</strong> في التحليل النقدي.</li>
+                <li><strong>استخدم التكنولوجيا:</strong> مثل إضافات كشف الأخبار الكاذبة.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>دور الحكومات والشركات في المواجهة</h2>
+            <p>مكافحة الأخبار الكاذبة تتطلب جهدًا جماعيًا:</p>
+            
+            <ul>
+                <li><strong>تشريعات جديدة:</strong> لمحاسبة ناشري الأخبار الكاذبة.</li>
+                <li><strong>تحسين الخوارزميات:</strong> للحد من انتشار التضليل.</li>
+                <li><strong>برامج التوعية:</strong> في المدارس والجامعات.</li>
+                <li><strong>تعاون دولي:</strong> لمحاربة التضليل عبر الحدود.</li>
+                <li><strong>دعم الصحافة:</strong> الموثوقة والتحقيقية.</li>
+                <li><strong>تقنيات الذكاء الاصطناعي:</strong> لكشف المحتوى المزيف.</li>
+            </ul>
+        </div>
+
+        <div class="trusted-sources">
+            <h2>القنوات والمصادر الموثوقة للأخبار</h2>
+            <div class="logos-container">
+                <img src="source/BBC.png" alt="BBC">
+                <img src="source/CNN.png" alt="CNN">
+                <img src="source/skynews.png" alt="Sky News">
+                <img src="source/aljazeera.png" alt="الجزيرة">
+                <img src="source/alarabiya.png" alt="العربية">
+                <img src="source/france24.png" alt="فرانس 24">
+                <img src="source/rt.png" alt="RT Arabic">
+                <img src="source/dw.png" alt="DW عربية">
+            </div>
+            <p>هذه بعض المصادر الموثوقة التي تلتزم بمعايير الصحافة المهنية. لكن يبقى التحقق من أي خبر ضروريًا، حتى من هذه المصادر.</p>
+        </div>
+
+        <div class="section">
+            <h2>الخاتمة: نحو وعي معلوماتي أفضل</h2>
+            <p>في عالم يزداد ترابطًا، أصبحت القدرة على تمييز الحقيقة من الخيال مهارة حياتية أساسية. الأخبار الكاذبة ليست مجرد إزعاج عابر، بل هي تهديد حقيقي للمجتمعات والديمقراطيات حول العالم. من خلال تطوير مهاراتنا في التحقق من المعلومات، وتربية جيل جديد أكثر وعيًا، وتعاون جميع الأطراف المعنية، يمكننا بناء دفاعات قوية ضد هذه الظاهرة.</p>
+            
+            <div class="quote">
+                "في حرب المعلومات، الحقيقة هي أول ضحية" - آيسخولوس
+            </div>
+            
+            <p>تذكر دائمًا: الوقاية خير من العلاج. قبل أن تنقر على "مشاركة"، توقف، فكر، تحقق. مستقبل مجتمعنا المعلوماتي يعتمد على قراراتنا الفردية والجماعية اليوم.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>تم إنشاء هذا المقال بواسطة <strong>Adem Essid</strong></p>
+        <p>مراجع ومصادر إضافية متاحة عند الطلب</p>
+        <small>© 2025 جميع الحقوق محفوظة. يمكن مشاركة هذا المحتوى مع الإشارة إلى المصدر.</small>
+    </div>
+
+    <!-- زر تبديل الوضع المظلم -->
+    <div class="dark-mode-toggle" id="darkModeToggle">
+        <svg class="dark-mode-icon" viewBox="0 0 24 24">
+            <g class="sun">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </g>
+            <g class="moon">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </g>
+        </svg>
+    </div>
+
+    <script>
+        // تحميل تفضيلات المستخدم من localStorage
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // تبديل الوضع المظلم
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            let theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+        });
+    </script>
+</body>
+</html>

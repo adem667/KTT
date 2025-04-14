@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحقق - كشف الأخبار الكاذبة</title>
+    <style>
+        :root {
+            --primary: #001a33;
+            --secondary: #0056b3;
+            --accent: #007bff;
+            --light: #f0f2f5;
+            --dark: #121212;
+            --text-light: #333;
+            --text-dark: #e0e0e0;
+            --true: #28a745;
+            --false: #dc3545;
+            --neutral: #ffc107;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: var(--text-light);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+        
+        .taskbar {
+            background-color: var(--primary);
+            padding: 10px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .taskbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        
+        .taskbar img {
+            width: 30px;
+            height: 30px;
+            margin-left: 10px;
+        }
+        
+        .taskbar h1 {
+            margin: 0;
+            font-size: 22px;
+            flex-grow: 1;
+            text-align: center;
+            color: white;
+        }
+        
+        .brand span {
+            font-weight: bold;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .taskbar .home-icon {
+            margin-left: 10px;
+        }
+        
+        .taskbar .home-icon img {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+        
+        .language-icons {
+            display: flex;
+            align-items: center;
+        }
+        
+        .language-icons img {
+            width: 45px;
+            height: 30px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .language-icons img:hover {
+            transform: scale(1.1);
+        }
+        
+        .language-icons span {
+            margin-left: 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 100px auto 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        h2 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+            position: relative;
+            padding-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        p {
+            color: var(--text-light);
+            font-size: 16px;
+            line-height: 1.7;
+            transition: color 0.3s ease;
+        }
+        
+        .input-container {
+            margin-bottom: 25px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: white;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+            margin: 25px auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 26, 51, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 26, 51, 0.4);
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        }
+        
+        #result {
+            margin-top: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        
+        /* الفوتر */
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background-color: var(--primary);
+            color: white;
+            font-size: 16px;
+            margin-top: 50px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .footer small {
+            font-size: 12px;
+            display: block;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        
+        /* تصميم الأخبار */
+        .news-item {
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            text-align: right;
+            transition: all 0.3s ease;
+        }
+        
+        .true-news {
+            border-left: 6px solid var(--true);
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+        
+        .false-news {
+            border-left: 6px solid var(--false);
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+        
+        .neutral-news {
+            border-left: 6px solid var(--neutral);
+            background-color: rgba(255, 193, 7, 0.1);
+        }
+        
+        .news-item p {
+            margin: 10px 0;
+        }
+        
+        .news-item a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        
+        .news-item a:hover {
+            text-decoration: underline;
+            color: var(--secondary);
+        }
+        
+        /* ملاحظة التحقق */
+        .note-box {
+            background-color: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid var(--neutral);
+            padding: 15px;
+            margin: 25px 0;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        
+        /* زر الوضع المظلم */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            cursor: pointer;
+            z-index: 1000;
+            background-color: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .dark-mode-icon {
+            width: 30px;
+            height: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode-icon .sun {
+            fill: #FFD700;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        
+        .dark-mode-icon .moon {
+            fill: #FFFFFF;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        /* أنماط الوضع المظلم */
+        body.dark-mode {
+            background-color: var(--dark);
+            color: var(--text-dark);
+        }
+        
+        body.dark-mode .container {
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+        }
+        
+        body.dark-mode h2 {
+            color: var(--accent);
+        }
+        
+        body.dark-mode h2::after {
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+        
+        body.dark-mode p,
+        body.dark-mode .input-label {
+            color: var(--text-dark);
+        }
+        
+        body.dark-mode input[type="text"] {
+            background-color: #333;
+            color: var(--text-dark);
+            border-color: #444;
+        }
+        
+        body.dark-mode input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+        
+        body.dark-mode .news-item {
+            background-color: #2d2d2d;
+            border-color: #444;
+        }
+        
+        body.dark-mode .note-box {
+            background-color: rgba(255, 193, 7, 0.1);
+            border-left-color: var(--neutral);
+        }
+        
+        body.dark-mode .dark-mode-toggle {
+            background-color: var(--accent);
+        }
+        
+        body.dark-mode .dark-mode-icon .sun {
+            opacity: 0;
+        }
+        
+        body.dark-mode .dark-mode-icon .moon {
+            opacity: 1;
+        }
+        
+        /* تأثيرات التحميل */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 86, 179, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* التكيف مع الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .container {
+                margin: 80px 15px 30px 15px;
+                padding: 20px;
+            }
+            
+            .taskbar h1 {
+                font-size: 18px;
+            }
+            
+            .language-icons img {
+                width: 35px;
+                height: 25px;
+            }
+            
+            .dark-mode-toggle {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="taskbar">
+        <a href="index.html" class="home-icon">
+            <img src="source/home.png" alt="الصفحة الرئيسية">
+        </a>
+        <div class="brand">
+            <span>KTT</span>
+        </div>
+        <h1 id="pageTitle">تحقق من الأخبار</h1>
+        <div class="language-icons">
+            <img src="source/united-arab-emirates.png" alt="AR" onclick="changeLanguage('ar')">
+            <span id="arLabel">AR</span>
+            <img src="source/united-kingdom.png" alt="EN" onclick="changeLanguage('en')">
+            <span id="enLabel">EN</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>تحقق من الأخبار</h2>
+        <p>أدخل نص الخبر للتحقق من صحته:</p>
+        
+        <div class="input-container">
+            <input type="text" id="newsInput" placeholder="أدخل نص الخبر أو الكلمات المفتاحية...">
+        </div>
+        
+        <button onclick="checkNews()">تحقق من الخبر</button>
+        
+        <div class="note-box" id="noteText">
+            ⚠️ ملاحظة: المحرك لا يعمل بلصق نص الخبر بالكامل، بل باستخدام الكلمات المفتاحية فقط مثل: لقاح كورونا، زلزال المغرب، تسريبات، إلخ.
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <div class="footer">
+        <p id="footerText">🚀 تم إنشاء هذا الموقع بواسطة <strong>Adem Essid</strong></p>
+        <small id="rightsText">© 2025 جميع الحقوق محفوظة.</small>
+    </div>
+
+    <!-- زر تبديل الوضع المظلم -->
+    <div class="dark-mode-toggle" id="darkModeToggle">
+        <svg class="dark-mode-icon" viewBox="0 0 24 24">
+            <g class="sun">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </g>
+            <g class="moon">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </g>
+        </svg>
+    </div>
+
+    <script>
+        // متغيرات النص للترجمة
+        let foundResultsText = "تم العثور على";
+        let resultsText = "نتيجة";
+        let ratingText = "التقييم";
+        let sourceText = "المصدر";
+        let textText = "النص";
+
+        // تحميل تفضيلات المستخدم من localStorage
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // تبديل الوضع المظلم
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            let theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+        });
+
+        async function checkNews() {
+            var input = document.getElementById("newsInput").value.trim();
+            var result = document.getElementById("result");
+            
+            if (input === "") {
+                result.innerHTML = `<div class="news-item neutral-news">
+                    <p style="color:var(--false);"><strong>خطأ:</strong> يرجى إدخال نص الخبر أو الكلمات المفتاحية</p>
+                </div>`;
+                return;
+            }
+
+            result.innerHTML = `<div class="news-item neutral-news">
+                <div style="display:flex;align-items:center;justify-content:center;">
+                    <span class="loading"></span> جاري البحث عن المعلومات وتحليلها...
+                </div>
+            </div>`;
+
+            try {
+                var apiKey = "AIzaSyCmw3FAcbVWZIuyG-sNfU_wT-RemJ9ucpI";
+                var apiUrl = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${encodeURIComponent(input)}&key=${apiKey}`;
+
+                let response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    throw new Error(`خطأ في الشبكة: ${response.status}`);
+                }
+
+                let data = await response.json();
+
+                result.innerHTML = "";
+
+                if (data.claims && data.claims.length > 0) {
+                    result.innerHTML = `<h3 style="text-align:center;margin-bottom:20px;">${foundResultsText} ${data.claims.length} ${resultsText}:</h3>`;
+
+                    data.claims.forEach(claim => {
+                        let text = claim.text || "لم يتم توفير نص الخبر.";
+                        let reviews = claim.claimReview || [];
+
+                        if (reviews.length > 0) {
+                            reviews.forEach(review => {
+                                let rating = review.textualRating || "غير محدد";
+                                let reviewer = review.publisher?.name || "مصدر غير معروف";
+                                let reviewUrl = review.url || "#";
+                                
+                                let newsClass = "neutral-news";
+                                let ratingColor = "var(--neutral)";
+                                
+                                if (rating.includes("False") || rating.includes("كاذب") || rating.includes("خاطئ") || rating.includes("مضلل")) {
+                                    newsClass = "false-news";
+                                    ratingColor = "var(--false)";
+                                } else if (rating.includes("True") || rating.includes("صحيح") || rating.includes("صحيحة")) {
+                                    newsClass = "true-news";
+                                    ratingColor = "var(--true)";
+                                }
+
+                                result.innerHTML += 
+                                    `<div class="news-item ${newsClass}">
+                                        <p><strong style="color:${ratingColor}">${ratingText}:</strong> <span style="color:${ratingColor}">${rating}</span></p>
+                                        <p><strong>${sourceText}:</strong> <a href="${reviewUrl}" target="_blank">${reviewer}</a></p>
+                                        <p><strong>${textText}:</strong> ${text}</p>
+                                    </div>`;
+                            });
+                        } else {
+                            result.innerHTML += 
+                                `<div class="news-item neutral-news">
+                                    <p><strong>${ratingText}:</strong> غير متوفر</p>
+                                    <p><strong>${sourceText}:</strong> غير معروف</p>
+                                    <p><strong>${textText}:</strong> ${text}</p>
+                                </div>`;
+                        }
+                    });
+                } else {
+                    result.innerHTML = `<div class="news-item neutral-news">
+                        <p style="text-align:center;">لم يتم العثور على نتائج للتحقق منها. حاول استخدام كلمات مفتاحية مختلفة.</p>
+                    </div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="news-item false-news">
+                    <p><strong>خطأ في الاتصال:</strong> ${error.message}</p>
+                    <p>يرجى المحاولة مرة أخرى لاحقاً أو التحقق من اتصالك بالإنترنت.</p>
+                </div>`;
+            }
+        }
+
+        // تغيير اللغة بناءً على الاختيار
+        function changeLanguage(language) {
+            if (language === 'ar') {
+                document.documentElement.lang = "ar";
+                document.getElementById("pageTitle").textContent = "تحقق من الأخبار";
+                document.querySelector("p").textContent = "أدخل نص الخبر للتحقق من صحته:";
+                document.querySelector("button").textContent = "تحقق من الخبر";
+                document.getElementById("newsInput").placeholder = "أدخل نص الخبر أو الكلمات المفتاحية...";
+                document.getElementById("noteText").innerHTML = "⚠️ ملاحظة: المحرك لا يعمل بلصق نص الخبر بالكامل، بل باستخدام الكلمات المفتاحية فقط مثل: لقاح كورونا، زلزال المغرب، تسريبات، إلخ.";
+                document.getElementById("footerText").innerHTML = "🚀 تم إنشاء هذا الموقع بواسطة <strong>Adem Essid</strong>";
+                document.getElementById("rightsText").textContent = "© 2025 جميع الحقوق محفوظة.";
+                foundResultsText = "تم العثور على";
+                resultsText = "نتيجة";
+                ratingText = "التقييم";
+                sourceText = "المصدر";
+                textText = "النص";
+                document.getElementById("arLabel").textContent = "AR";
+                document.getElementById("enLabel").textContent = "EN";
+            } else {
+                document.documentElement.lang = "en";
+                document.getElementById("pageTitle").textContent = "Fact Check News";
+                document.querySelector("p").textContent = "Enter the news text to verify its authenticity:";
+                document.querySelector("button").textContent = "Check News";
+                document.getElementById("newsInput").placeholder = "Enter news text or keywords...";
+                document.getElementById("noteText").innerHTML = "⚠️ Note: The engine does not work by pasting the entire news text but by using keywords such as: COVID vaccine, Morocco earthquake, leaks, etc.";
+                document.getElementById("footerText").innerHTML = "🚀 This site was created by <strong>Adem Essid</strong>";
+                document.getElementById("rightsText").textContent = "© 2025 All rights reserved.";
+                foundResultsText = "Found";
+                resultsText = "result(s)";
+                ratingText = "Rating";
+                sourceText = "Source";
+                textText = "Text";
+                document.getElementById("arLabel").textContent = "AR";
+                document.getElementById("enLabel").textContent = "EN";
+            }
+        }
+    </script>
+</body>
+</html>

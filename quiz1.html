@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبارات التوعية الاجتماعية</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-dark: #1e40af;
+            --primary-light: rgba(30, 58, 138, 0.5);
+            --text-light: #e0e7ff;
+            --text-dark: #1e1b4b;
+            --bg-dark: #111827;
+            --bg-light: #f0f2f5;
+            --card-bg: #ffffff;
+            --card-dark: #1e1e1e;
+            --topic-bullying: #dc2626;
+            --topic-harassment: #c026d3;
+            --topic-adolescence: #7c3aed;
+            --topic-extremism: #d97706;
+        }
+        
+        body {
+            font-family: 'Tajawal', 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* Taskbar Styles */
+        .taskbar {
+            background-color: var(--primary);
+            padding: 10px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .taskbar h1 {
+            margin: 0;
+            font-size: 22px;
+            flex-grow: 1;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .taskbar img {
+            width: 30px;
+            height: 30px;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .taskbar img:hover {
+            transform: scale(1.1);
+        }
+
+        .taskbar .home-icon {
+            margin-left: 10px;
+        }
+
+        .taskbar .home-icon img {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        .brand span {
+            font-weight: bold;
+            font-size: 24px;
+            color: white;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding-top: 80px;
+            padding-bottom: 30px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .main-content-panel {
+            flex: 3;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(30, 58, 138, 0.1);
+            border: 1px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .leaderboard-sidebar {
+            flex: 1;
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(30, 58, 138, 0.1);
+            border: 1px solid var(--primary);
+            height: fit-content;
+            transition: all 0.3s ease;
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+            position: relative;
+            padding-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transition: all 0.3s ease;
+        }
+        
+        .info-box {
+            background-color: rgba(30, 58, 138, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.7;
+            transition: all 0.3s ease;
+        }
+        
+        .topic-selection {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .topic-btn {
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: bold;
+            border: 2px solid transparent;
+            background-color: rgba(30, 58, 138, 0.1);
+        }
+        
+        .topic-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .topic-btn.bullying {
+            border-color: var(--topic-bullying);
+            color: var(--topic-bullying);
+        }
+        
+        .topic-btn.harassment {
+            border-color: var(--topic-harassment);
+            color: var(--topic-harassment);
+        }
+        
+        .topic-btn.adolescence {
+            border-color: var(--topic-adolescence);
+            color: var(--topic-adolescence);
+        }
+        
+        .topic-btn.extremism {
+            border-color: var(--topic-extremism);
+            color: var(--topic-extremism);
+        }
+        
+        .topic-btn.active {
+            color: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        
+        .topic-btn.bullying.active {
+            background: linear-gradient(135deg, var(--topic-bullying), #b91c1c);
+        }
+        
+        .topic-btn.harassment.active {
+            background: linear-gradient(135deg, var(--topic-harassment), #a21caf);
+        }
+        
+        .topic-btn.adolescence.active {
+            background: linear-gradient(135deg, var(--topic-adolescence), #6d28d9);
+        }
+        
+        .topic-btn.extremism.active {
+            background: linear-gradient(135deg, var(--topic-extremism), #b45309);
+        }
+        
+        .input-container {
+            margin-bottom: 30px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--text-dark);
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px 18px;
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: rgba(30, 58, 138, 0.1);
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 10px rgba(30, 58, 138, 0.2);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 30px auto 0;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.2);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3);
+        }
+        
+        .difficulty-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .difficulty-btn {
+            background: rgba(30, 58, 138, 0.1);
+            color: var(--text-dark);
+            border: 1px solid var(--primary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 0 15px rgba(30, 58, 138, 0.2);
+        }
+        
+        .quiz-container {
+            margin-top: 20px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--primary);
+        }
+        
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: var(--text-dark);
+            transition: color 0.3s ease;
+        }
+        
+        .options {
+            margin-right: 20px;
+        }
+        
+        .option {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .option:hover {
+            background-color: rgba(30, 58, 138, 0.1);
+        }
+        
+        .option input[type="radio"] {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            margin-left: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option input[type="radio"]:checked {
+            background-color: var(--primary);
+            box-shadow: 0 0 5px var(--primary);
+        }
+        
+        .result {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            background-color: rgba(30, 58, 138, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .welcome-screen, .quiz-screen, .result-screen {
+            display: none;
+        }
+        
+        .active-screen {
+            display: block;
+        }
+        
+        .leaderboard h2 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--primary);
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            background-color: rgba(30, 58, 138, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .leaderboard-item:hover {
+            background-color: rgba(30, 58, 138, 0.2);
+        }
+        
+        .leaderboard-rank {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .leaderboard-name {
+            flex: 1;
+            text-align: right;
+            padding: 0 10px;
+        }
+        
+        .leaderboard-score {
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+        
+        .leaderboard-difficulty {
+            font-size: 0.8em;
+            color: var(--text-dark);
+            opacity: 0.8;
+        }
+        
+        .leaderboard-topic {
+            font-size: 0.7em;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-right: 5px;
+            color: white;
+        }
+        
+        .topic-bullying {
+            background-color: var(--topic-bullying);
+        }
+        
+        .topic-harassment {
+            background-color: var(--topic-harassment);
+        }
+        
+        .topic-adolescence {
+            background-color: var(--topic-adolescence);
+        }
+        
+        .topic-extremism {
+            background-color: var(--topic-extremism);
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            cursor: pointer;
+            z-index: 1000;
+            background-color: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .dark-mode-icon {
+            width: 30px;
+            height: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode-icon .sun {
+            fill: #FFD700;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .dark-mode-icon .moon {
+            fill: #FFFFFF;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+        }
+
+        body.dark-mode .main-content-panel,
+        body.dark-mode .leaderboard-sidebar {
+            background-color: var(--card-dark);
+            border-color: var(--primary-dark);
+        }
+
+        body.dark-mode h1,
+        body.dark-mode .leaderboard h2 {
+            color: var(--text-light);
+        }
+
+        body.dark-mode h1::after {
+            background: linear-gradient(90deg, transparent, var(--text-light), transparent);
+        }
+
+        body.dark-mode .info-box {
+            background-color: rgba(30, 58, 138, 0.3);
+            border-left-color: var(--text-light);
+        }
+
+        body.dark-mode .input-label,
+        body.dark-mode .question-text,
+        body.dark-mode .leaderboard-score {
+            color: var(--text-light);
+        }
+
+        body.dark-mode .input-field {
+            background-color: rgba(30, 58, 138, 0.3);
+            color: var(--text-light);
+            border-color: var(--text-light);
+        }
+
+        body.dark-mode .option:hover {
+            background-color: rgba(30, 58, 138, 0.3);
+        }
+
+        body.dark-mode .result {
+            background-color: rgba(30, 58, 138, 0.3);
+            border-left-color: var(--text-light);
+        }
+
+        body.dark-mode .leaderboard-item {
+            background-color: rgba(30, 58, 138, 0.3);
+        }
+
+        body.dark-mode .leaderboard-item:hover {
+            background-color: rgba(30, 58, 138, 0.4);
+        }
+
+        body.dark-mode .dark-mode-toggle {
+            background-color: var(--primary-dark);
+        }
+
+        body.dark-mode .dark-mode-icon .sun {
+            opacity: 0;
+        }
+
+        body.dark-mode .dark-mode-icon .moon {
+            opacity: 1;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                margin: 15px;
+            }
+            
+            .topic-selection {
+                grid-template-columns: 1fr;
+            }
+            
+            .leaderboard-sidebar {
+                order: -1;
+                margin-bottom: 20px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            .difficulty-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .dark-mode-toggle {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content-panel,
+            .leaderboard-sidebar {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Taskbar with Home Button -->
+    <div class="taskbar">
+        <a href="index.html" class="home-icon">
+            <img src="source/home.png" alt="الصفحة الرئيسية">
+        </a>
+        <h1>اختبارات التوعية الاجتماعية</h1>
+        <div class="brand">
+            <span>KTT</span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="main-content-panel">
+                <!-- شاشة الترحيب -->
+                <div id="welcome-screen" class="welcome-screen active-screen">
+                    <h1>اختبارات التوعية الاجتماعية</h1>
+                    
+                    <div class="info-box">
+                        <p>اختر موضوعاً تريد اختبار معرفتك فيه، ثم أدخل اسمك واختر مستوى الصعوبة لتبدأ.</p>
+                    </div>
+                    
+                    <div class="topic-selection">
+                        <div class="topic-btn bullying" data-topic="bullying">
+                            التنمر
+                        </div>
+                        <div class="topic-btn harassment" data-topic="harassment">
+                            التحرش
+                        </div>
+                        <div class="topic-btn adolescence" data-topic="adolescence">
+                            فترة المراهقة
+                        </div>
+                        <div class="topic-btn extremism" data-topic="extremism">
+                            التطرف والتشدد
+                        </div>
+                    </div>
+                    
+                    <div class="input-container">
+                        <label class="input-label">اسمك:</label>
+                        <input type="text" id="username" class="input-field" placeholder="أدخل اسمك هنا">
+                    </div>
+                    
+                    <div class="difficulty-buttons">
+                        <button class="difficulty-btn" data-level="easy">سهل</button>
+                        <button class="difficulty-btn" data-level="medium">متوسط</button>
+                        <button class="difficulty-btn" data-level="hard">صعب</button>
+                    </div>
+                    
+                    <button id="start-quiz" class="submit-btn">بدء الاختبار</button>
+                </div>
+                
+                <!-- شاشة الاختبار -->
+                <div id="quiz-screen" class="quiz-screen">
+                    <h1 id="quiz-title">اختبار التوعية الاجتماعية</h1>
+                    
+                    <div class="info-box">
+                        <p id="quiz-instructions">اختر الإجابة الصحيحة لكل سؤال. كل إجابة صحيحة تعطيك نقاطاً حسب مستوى الصعوبة.</p>
+                    </div>
+                    
+                    <div id="quiz-container" class="quiz-container">
+                        <!-- الأسئلة يتم إضافتها هنا بالجافاسكريبت -->
+                    </div>
+                    
+                    <button id="submit-quiz" class="submit-btn">إنهاء الاختبار</button>
+                </div>
+                
+                <!-- شاشة النتائج -->
+                <div id="result-screen" class="result-screen">
+                    <h1>نتيجة الاختبار</h1>
+                    
+                    <div id="result" class="result"></div>
+                    
+                    <button id="restart-quiz" class="submit-btn">إعادة الاختبار</button>
+                </div>
+            </div>
+            
+            <!-- لوحة المتصدرين -->
+            <div class="leaderboard-sidebar">
+                <h2>قامة المتصدرين<h2>
+                <div id="leaderboard-list">
+                    <!-- سيتم ملؤها بالجافاسكريبت -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dark Mode Toggle Button -->
+    <div class="dark-mode-toggle" id="darkModeToggle">
+        <svg class="dark-mode-icon" viewBox="0 0 24 24">
+            <g class="sun">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </g>
+            <g class="moon">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </g>
+        </svg>
+    </div>
+    
+    <script>
+        // بيانات الأسئلة لكل موضوع
+        const questionsData = {
+            bullying: {
+                easy: [
+                    {
+                        question: "ما هو التعريف الصحيح للتنمر؟",
+                        options: [
+                            "مزاح بين الأصدقاء",
+                            "سلوك عدواني متكرر يهدف لإيضاح شخص آخر",
+                            "اختلاف في الرأي بين شخصين",
+                            "منافسة صحية بين الزملاء"
+                        ],
+                        answer: 1,
+                        points: 1
+                    },
+                    {
+                        question: "ما هي أكثر أنواع التنمر انتشاراً في المدارس؟",
+                        options: [
+                            "التنمر اللفظي",
+                            "التنمر الجسدي",
+                            "التنمر الإلكتروني",
+                            "التنمر العرقي"
+                        ],
+                        answer: 0,
+                        points: 1
+                    },
+                    {
+                        question: "كيف يجب أن تتصرف إذا كنت ضحية للتنمر؟",
+                        options: [
+                            "تجاهل الموقف",
+                            "الرد بالمثل",
+                            "إخبار شخص بالغ موثوق",
+                            "الانسحاب من المدرسة"
+                        ],
+                        answer: 2,
+                        points: 1
+                    }
+                ],
+                medium: [
+                    {
+                        question: "ما هي آثار التنمر طويلة المدى على الضحية؟",
+                        options: [
+                            "زيادة الثقة بالنفس",
+                            "مشاكل نفسية مثل الاكتئاب والقلق",
+                            "تحسن الأداء الأكاديمي",
+                            "زيادة الشعبية بين الأقران"
+                        ],
+                        answer: 1,
+                        points: 2
+                    },
+                    {
+                        question: "ما هو دور المتفرج في حالات التنمر؟",
+                        options: [
+                            "التصفيق والضحك",
+                            "التسجيل بالفيديو",
+                            "دعم الضحية وإخبار المسؤولين",
+                            "عدم التدخل مطلقاً"
+                        ],
+                        answer: 2,
+                        points: 2
+                    },
+                    {
+                        question: "ما الفرق بين التنمر والخلاف العادي؟",
+                        options: [
+                            "التنمر يكون لمرة واحدة فقط",
+                            "التنمر يتضمن اختلافاً في الرأي",
+                            "التنمر سلوك متكرر يهدف للإيضاح",
+                            "لا يوجد فرق بينهما"
+                        ],
+                        answer: 2,
+                        points: 2
+                    }
+                ],
+                hard: [
+                    {
+                        question: "ما هي استراتيجيات الوقاية من التنمر في المدارس؟",
+                        options: [
+                            "تجاهل المشكلة",
+                            "برامج التوعية وتنمية المهارات الاجتماعية",
+                            "معاقبة جميع الطلاب",
+                            "عدم مناقشة الموضوع أمام الطلاب"
+                        ],
+                        answer: 1,
+                        points: 3
+                    },
+                    {
+                        question: "كيف يمكن للضحايا التغلب على آثار التنمر؟",
+                        options: [
+                            "العزلة والانطواء",
+                            "طلب المساعدة النفسية والمشاركة في أنشطة تعزز الثقة",
+                            "الانتقام من المتنمرين",
+                            "إخفاء المشاعر دائماً"
+                        ],
+                        answer: 1,
+                        points: 3
+                    },
+                    {
+                        question: "ما هو التنمر غير المباشر؟",
+                        options: [
+                            "الضرب والدفع",
+                            "الإقصاء ونشر الشائعات",
+                            "السب والشتم",
+                            "المنافسة الرياضية"
+                        ],
+                        answer: 1,
+                        points: 3
+                    }
+                ]
+            },
+            harassment: {
+                easy: [
+                    {
+                        question: "ما هو التحرش الجنسي؟",
+                        options: [
+                            "مجاملة لطيفة",
+                            "أي سلوك غير مرغوب ذو طبيعة جنسية",
+                            "محادثة عادية بين زملاء العمل",
+                            "نصيحة مهنية"
+                        ],
+                        answer: 1,
+                        points: 1
+                    },
+                    {
+                        question: "ما هي أكثر أماكن التحرش شيوعاً؟",
+                        options: [
+                            "الأماكن العامة المزدحمة",
+                            "الفصول الدراسية",
+                            "المكتبات",
+                            "المتاحف"
+                        ],
+                        answer: 0,
+                        points: 1
+                    },
+                    {
+                        question: "كيف تتصرف إذا تعرضت للتحرش؟",
+                        options: [
+                            "الصمت والخوف",
+                            "الاستجابة لرغبات المتحرش",
+                            "الصراخ وطلب المساعدة",
+                            "الضحك على الموقف"
+                        ],
+                        answer: 2,
+                        points: 1
+                    }
+                ],
+                medium: [
+                    {
+                        question: "ما هي أنواع التحرش الجنسي؟",
+                        options: [
+                            "لفظي وجسدي وبصري",
+                            "اقتصادي فقط",
+                            "ثقافي وديني",
+                            "رياضي وفني"
+                        ],
+                        answer: 0,
+                        points: 2
+                    },
+                    {
+                        question: "ما هو التحرش الإلكتروني؟",
+                        options: [
+                            "إرسال رسائل بريئة",
+                            "مشاركة منشورات مفيدة",
+                            "إرسال محتوى جنسي غير مرغوب فيه",
+                            "التواصل مع الأصدقاء فقط"
+                        ],
+                        answer: 2,
+                        points: 2
+                    },
+                    {
+                        question: "ما هي آثار التحرش على الضحية؟",
+                        options: [
+                            "زيادة الثقة بالنفس",
+                            "مشاكل نفسية واضطرابات ما بعد الصدمة",
+                            "تحسن الأداء الوظيفي",
+                            "زيادة العلاقات الاجتماعية"
+                        ],
+                        answer: 1,
+                        points: 2
+                    }
+                ],
+                hard: [
+                    {
+                        question: "كيف يمكن منع التحرش في أماكن العمل؟",
+                        options: [
+                            "تجاهل الشكاوى",
+                            "وضع سياسات واضحة وتدريب الموظفين",
+                            "عدم مناقشة الموضوع",
+                            "إلقاء اللوم على الضحايا"
+                        ],
+                        answer: 1,
+                        points: 3
+                    },
+                    {
+                        question: "ما هو دور الشهود في حالات التحرش؟",
+                        options: [
+                            "التجاهل وعدم التدخل",
+                            "دعم الضحية والإبلاغ عن الحادث",
+                            "السخرية من الضحية",
+                            "حماية المتحرش"
+                        ],
+                        answer: 1,
+                        points: 3
+                    },
+                    {
+                        question: "ما هي القوانين التي تجرم التحرش في بلدك؟",
+                        options: [
+                            "لا توجد قوانين",
+                            "قوانين تختلف حسب الدولة",
+                            "مسموح به في بعض الحالات",
+                            "مشروع في جميع الظروف"
+                        ],
+                        answer: 1,
+                        points: 3
+                    }
+                ]
+            },
+            adolescence: {
+                easy: [
+                    {
+                        question: "ما هي فترة المراهقة؟",
+                        options: [
+                            "مرحلة الطفولة المبكرة",
+                            "المرحلة بين الطفولة والرشد",
+                            "مرحلة الشيخوخة",
+                            "مرحلة ما قبل المدرسة"
+                        ],
+                        answer: 1,
+                        points: 1
+                    },
+                    {
+                        question: "ما هي التغيرات الجسدية في المراهقة؟",
+                        options: [
+                            "لا يوجد أي تغيرات",
+                            "تغيرات في الطول والوزن وعلامات البلوغ",
+                            "فقدان جميع الأسنان",
+                            "ظهور تجاعيد الوجه"
+                        ],
+                        answer: 1,
+                        points: 1
+                    },
+                    {
+                        question: "ما هي المشاعر الشائعة في المراهقة؟",
+                        options: [
+                            "اللامبالاة المطلقة",
+                            "التقلب المزاجي والحساسية",
+                            "عدم الشعور بأي عاطفة",
+                            "النضج العاطفي الكامل"
+                        ],
+                        answer: 1,
+                        points: 1
+                    }
+                ],
+                medium: [
+                    {
+                        question: "كيف يمكن التعامل مع التقلبات المزاجية للمراهق؟",
+                        options: [
+                            "الصراخ والعقاب",
+                            "الفهم والدعم والتواصل الجيد",
+                            "التجاهل الكامل",
+                            "مقارنته بغيره"
+                        ],
+                        answer: 1,
+                        points: 2
+                    },
+                    {
+                        question: "ما هي أهمية الأصدقاء في مرحلة المراهقة؟",
+                        options: [
+                            "لا أهمية لهم",
+                            "هم المصدر الرئيسي للدعم والتأثير",
+                            "يسببون المشاكل فقط",
+                            "يجب تجنبهم تماماً"
+                        ],
+                        answer: 1,
+                        points: 2
+                    },
+                    {
+                        question: "ما هي مخاطر سوء استخدام الإنترنت في المراهقة؟",
+                        options: [
+                            "لا يوجد أي مخاطر",
+                            "الإدمان والتعرض لمحتوى غير مناسب",
+                            "تحسين الأداء الدراسي فقط",
+                            "زيادة النوم"
+                        ],
+                        answer: 1,
+                        points: 2
+                    }
+                ],
+                hard: [
+                    {
+                        question: "كيف يمكن تعزيز ثقة المراهق بنفسه؟",
+                        options: [
+                            "النقد المستمر",
+                            "الدعم والتشجيع ومساعدته على اكتشاف مواهبه",
+                            "مقارنته بغيره دائماً",
+                            "منعه من التجربة والتعلم"
+                        ],
+                        answer: 1,
+                        points: 3
+                    },
+                    {
+                        question: "ما هو دور الأسرة في توجيه المراهق؟",
+                        options: [
+                            "السيطرة الكاملة على قراراته",
+                            "التوجيه مع منح مساحة من الاستقلالية",
+                            "التخلي عنه تماماً",
+                            "إجباره على تنفيذ كل ما يريده الوالدان"
+                        ],
+                        answer: 1,
+                        points: 3
+                    },
+                    {
+                        question: "كيف يمكن الوقاية من السلوكيات الخطرة في المراهقة؟",
+                        options: [
+                            "التوعية والحوار المفتوح",
+                            "العقاب الشديد فقط",
+                            "الحرمان من كل شيء",
+                            "عدم مناقشة الموضوع أبداً"
+                        ],
+                        answer: 0,
+                        points: 3
+                    }
+                ]
+            },
+            extremism: {
+                easy: [
+                    {
+                        question: "ما هو تعريف التطرف؟",
+                        options: [
+                            "الاعتدال في الرأي",
+                            "التشدد في الرأي ورفض الآخر",
+                            "التسامح مع جميع الآراء",
+                            "عدم الاهتمام بأي قضية"
+                        ],
+                        answer: 1,
+                        points: 1
+                    },
+                    {
+                        question: "ما هي أسباب التطرف؟",
+                        options: [
+                            "الفهم الصحيح للدين",
+                            "الجهل والتفسير الخاطئ للدين أو السياسة",
+                            "التعليم الجيد",
+                            "الانفتاح على الثقافات"
+                        ],
+                        answer: 1,
+                        points: 1
+                    },
+                    {
+                        question: "كيف يمكن مقاومة الأفكار المتطرفة؟",
+                        options: [
+                            "بالعنف والكراهية",
+                            "بالحوار والعلم والفهم الصحيح",
+                            "بالتقوقع والانعزال",
+                            "بتكفير الآخرين"
+                        ],
+                        answer: 1,
+                        points: 1
+                    }
+                ],
+                medium: [
+                    {
+                        question: "ما هي علامات الشخص المتطرف؟",
+                        options: [
+                            "التسامح وتقبل الآخر",
+                            "التعصب ورفض الرأي المختلف",
+                            "الانفتاح الثقافي",
+                            "حب التعلم من الجميع"
+                        ],
+                        answer: 1,
+                        points: 2
+                    },
+                    {
+                        question: "كيف يؤثر التطرف على المجتمع؟",
+                        options: [
+                            "يزيد من تماسك المجتمع",
+                            "يسبب الفرقة والعنف",
+                            "ينشر المحبة بين الناس",
+                            "يشجع على التعليم"
+                        ],
+                        answer: 1,
+                        points: 2
+                    },
+                    {
+                        question: "ما هو دور التعليم في مكافحة التطرف؟",
+                        options: [
+                            "لا يوجد أي دور",
+                            "تعزيز التفكير النقدي وقبول الآخر",
+                            "تعليم الكراهية فقط",
+                            "منع التعليم تماماً"
+                        ],
+                        answer: 1,
+                        points: 2
+                    }
+                ],
+                hard: [
+                    {
+                        question: "ما هي استراتيجيات الوقاية من التطرف؟",
+                        options: [
+                            "التوعية وبناء المناعة الفكرية",
+                            "التشجيع على العنف",
+                            "منع الحوار بين الأديان",
+                            "نشر الأفكار المتطرفة"
+                        ],
+                        answer: 0,
+                        points: 3
+                    },
+                    {
+                        question: "كيف يمكن إعادة تأهيل المتطرفين؟",
+                        options: [
+                            "بالعقاب فقط",
+                            "ببرامج إصلاحية تعتمد على الحوار والعلم",
+                            "بتكفيرهم",
+                            "بسجنهم مدى الحياة"
+                        ],
+                        answer: 1,
+                        points: 3
+                    },
+                    {
+                        question: "ما هو الفرق بين التدين والتطرف؟",
+                        options: [
+                            "لا يوجد فرق",
+                            "التدين اعتدال والتطرف تشدد",
+                            "التطرف هو التدين الصحيح",
+                            "التدين يعني رفض جميع الأديان"
+                        ],
+                        answer: 1,
+                        points: 3
+                    }
+                ]
+            }
+        };
+
+        // عناصر DOM
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const usernameInput = document.getElementById('username');
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+        const topicBtns = document.querySelectorAll('.topic-btn');
+        const startQuizBtn = document.getElementById('start-quiz');
+        const quizContainer = document.getElementById('quiz-container');
+        const submitQuizBtn = document.getElementById('submit-quiz');
+        const resultDiv = document.getElementById('result');
+        const leaderboardList = document.getElementById('leaderboard-list');
+        const restartQuizBtn = document.getElementById('restart-quiz');
+        const quizTitle = document.getElementById('quiz-title');
+        const quizInstructions = document.getElementById('quiz-instructions');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+
+        // متغيرات التطبيق
+        let currentDifficulty = '';
+        let currentTopic = '';
+        let currentQuestions = [];
+        let userAnswers = [];
+        let userName = '';
+        let leaderboardData = JSON.parse(localStorage.getItem('socialQuizLeaderboard')) || [];
+
+        // تهيئة لوحة المتصدرين
+        updateLeaderboard();
+
+        // أحداث الأزرار
+        difficultyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                difficultyBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentDifficulty = btn.dataset.level;
+            });
+        });
+
+        topicBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                topicBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTopic = btn.dataset.topic;
+            });
+        });
+
+        startQuizBtn.addEventListener('click', startQuiz);
+        submitQuizBtn.addEventListener('click', submitQuiz);
+        restartQuizBtn.addEventListener('click', restartQuiz);
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+
+        // تحميل تفضيلات المستخدم من localStorage
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // تبديل الوضع المظلم
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            let theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+        }
+
+        // بدء الاختبار
+        function startQuiz() {
+            if (!usernameInput.value.trim()) {
+                alert('الرجاء إدخال اسمك');
+                return;
+            }
+            
+            if (!currentTopic) {
+                alert('الرجاء اختيار موضوع الاختبار');
+                return;
+            }
+            
+            if (!currentDifficulty) {
+                alert('الرجاء اختيار مستوى الصعوبة');
+                return;
+            }
+            
+            userName = usernameInput.value.trim();
+            currentQuestions = questionsData[currentTopic][currentDifficulty];
+            userAnswers = [];
+            
+            // تحديث واجهة الاختبار حسب الموضوع والمستوى
+            quizTitle.textContent = `اختبار ${getTopicName(currentTopic)} - مستوى ${getDifficultyName(currentDifficulty)}`;
+            quizInstructions.textContent = `اختر الإجابة الصحيحة لكل سؤال. كل إجابة صحيحة تعطيك ${currentDifficulty === 'easy' ? 1 : currentDifficulty === 'medium' ? 2 : 3} نقاط.`;
+            
+            // عرض الأسئلة
+            renderQuestions();
+            
+            // تغيير الشاشة
+            welcomeScreen.classList.remove('active-screen');
+            quizScreen.classList.add('active-screen');
+        }
+
+        // عرض الأسئلة
+        function renderQuestions() {
+            quizContainer.innerHTML = '';
+            currentQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.textContent = `${index + 1}. ${q.question}`;
+                
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                
+                q.options.forEach((option, optIndex) => {
+                    const optionLabel = document.createElement('label');
+                    optionLabel.className = 'option';
+                    
+                    const optionInput = document.createElement('input');
+                    optionInput.type = 'radio';
+                    optionInput.name = `q${index}`;
+                    optionInput.value = optIndex;
+                    
+                    optionInput.addEventListener('change', () => {
+                        userAnswers[index] = optIndex;
+                    });
+                    
+                    optionLabel.appendChild(optionInput);
+                    optionLabel.appendChild(document.createTextNode(option));
+                    optionsDiv.appendChild(optionLabel);
+                });
+                
+                questionDiv.appendChild(questionText);
+                questionDiv.appendChild(optionsDiv);
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        // تقديم الاختبار
+        function submitQuiz() {
+            // التحقق من إجابة جميع الأسئلة
+            if (userAnswers.length !== currentQuestions.length) {
+                alert('الرجاء الإجابة على جميع الأسئلة');
+                return;
+            }
+            
+            // حساب النتيجة
+            let score = 0;
+            currentQuestions.forEach((q, index) => {
+                if (userAnswers[index] === q.answer) {
+                    score += q.points;
+                }
+            });
+            
+            // حفظ النتيجة في لوحة المتصدرين
+            saveScore(score);
+            
+            // عرض النتيجة
+            showResult(score);
+            
+            // تغيير الشاشة
+            quizScreen.classList.remove('active-screen');
+            resultScreen.classList.add('active-screen');
+        }
+
+        // حفظ النتيجة
+        function saveScore(score) {
+            leaderboardData.push({
+                name: userName,
+                score: score,
+                difficulty: currentDifficulty,
+                topic: currentTopic,
+                date: new Date().toLocaleDateString()
+            });
+            
+            // ترتيب اللوحة حسب النقاط
+            leaderboardData.sort((a, b) => b.score - a.score);
+            
+            // الاحتفاظ بأفضل 10 نتائج فقط
+            if (leaderboardData.length > 10) {
+                leaderboardData = leaderboardData.slice(0, 10);
+            }
+            
+            // حفظ في localStorage
+            localStorage.setItem('socialQuizLeaderboard', JSON.stringify(leaderboardData));
+            
+            // تحديث لوحة المتصدرين
+            updateLeaderboard();
+        }
+
+        // تحديث لوحة المتصدرين
+        function updateLeaderboard() {
+            leaderboardList.innerHTML = '';
+            
+            if (leaderboardData.length === 0) {
+                leaderboardList.innerHTML = '<p>لا توجد نتائج مسجلة بعد</p>';
+                return;
+            }
+            
+            leaderboardData.forEach((item, index) => {
+                const leaderItem = document.createElement('div');
+                leaderItem.className = 'leaderboard-item';
+                
+                const rankSpan = document.createElement('span');
+                rankSpan.className = 'leaderboard-rank';
+                rankSpan.textContent = `${index + 1}.`;
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'leaderboard-name';
+                nameSpan.textContent = item.name;
+                
+                const scoreSpan = document.createElement('span');
+                scoreSpan.className = 'leaderboard-score';
+                scoreSpan.textContent = `${item.score} نقاط`;
+                
+                const topicSpan = document.createElement('span');
+                topicSpan.className = `leaderboard-topic topic-${item.topic}`;
+                topicSpan.textContent = getTopicName(item.topic);
+                
+                leaderItem.appendChild(rankSpan);
+                leaderItem.appendChild(nameSpan);
+                leaderItem.appendChild(topicSpan);
+                leaderItem.appendChild(scoreSpan);
+                leaderboardList.appendChild(leaderItem);
+            });
+        }
+
+        // عرض النتيجة
+        function showResult(score) {
+            const totalPoints = currentQuestions.reduce((sum, q) => sum + q.points, 0);
+            const percentage = Math.round((score / totalPoints) * 100);
+            
+            let message = '';
+            let color = '';
+            
+            if (percentage >= 80) {
+                message = `ممتاز! ${userName} لقد سجلت ${score} من ${totalPoints} نقطة (${percentage}%)`;
+                color = '#4CAF50';
+            } else if (percentage >= 50) {
+                message = `جيد! ${userName} لقد سجلت ${score} من ${totalPoints} نقطة (${percentage}%)`;
+                color = '#FFC107';
+            } else {
+                message = `تحتاج لتحسين معرفتك! ${userName} لقد سجلت ${score} من ${totalPoints} نقطة (${percentage}%)`;
+                color = '#F44336';
+            }
+            
+            resultDiv.innerHTML = `
+                <p style="color: ${color}">${message}</p>
+                <p>الموضوع: ${getTopicName(currentTopic)}</p>
+                <p>مستوى الصعوبة: ${getDifficultyName(currentDifficulty)}</p>
+            `;
+            resultDiv.style.display = 'block';
+        }
+
+        // إعادة الاختبار
+        function restartQuiz() {
+            resultScreen.classList.remove('active-screen');
+            welcomeScreen.classList.add('active-screen');
+            usernameInput.value = userName;
+            topicBtns.forEach(btn => {
+                if (btn.dataset.topic === currentTopic) {
+                    btn.classList.add('active');
+                }
+            });
+            difficultyBtns.forEach(btn => {
+                if (btn.dataset.level === currentDifficulty) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // مساعدة: تحويل مستوى الصعوبة إلى اسم
+        function getDifficultyName(difficulty) {
+            switch(difficulty) {
+                case 'easy': return 'سهل';
+                case 'medium': return 'متوسط';
+                case 'hard': return 'صعب';
+                default: return '';
+            }
+        }
+
+        // مساعدة: تحويل اسم الموضوع إلى اسم معروض
+        function getTopicName(topic) {
+            switch(topic) {
+                case 'bullying': return 'التنمر';
+                case 'harassment': return 'التحرش';
+                case 'adolescence': return 'فترة المراهقة';
+                case 'extremism': return 'التطرف والتشدد';
+                default: return '';
+            }
+        }
+    </script>
+</body>
+</html>
